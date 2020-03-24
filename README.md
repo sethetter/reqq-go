@@ -21,7 +21,7 @@ This will..
 ## Request File Format
 
 ```
-http://the.url.to/send/to?query=here
+POST http://the.url.to/send/to?query=here
 x-header-a: header values here
 x-header-b: yet-another-header
 body
@@ -40,3 +40,4 @@ This project is under active development!
 - Better output.
   - More content-type formats?
   - Colors?
+- Comments in request files.
