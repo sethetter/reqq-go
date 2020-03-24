@@ -44,3 +44,8 @@ This project is under active development!
   - More content-type formats?
   - Colors?
 - Comments in request files.
+
+# Inpsiration
+
+- [Insomnia](https://insomnia.rest/) for the idea of having predefined requests and environment configurations.
+- [vim-rest-console](https://github.com/diepm/vim-rest-console) for the request file format.
