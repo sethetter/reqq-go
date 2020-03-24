@@ -6,13 +6,17 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strings"
 )
 
 func FormatResponse(res *http.Response) (string, error) {
 	out := res.Status + "\n"
 
-	for k, v := range res.Header {
-		out = out + fmt.Sprintf("%s: %s\n", k, v)
+	for k, vs := range res.Header {
+		// Same header can have multiple entries.
+		for _, v := range vs {
+			out = out + fmt.Sprintf("%s: %s\n", k, v)
+		}
 	}
 
 	out = out + "\n"
@@ -32,13 +36,13 @@ func FormatResponse(res *http.Response) (string, error) {
 }
 
 func FormatBody(cType string, body []byte) (string, error) {
-	switch cType {
-	case "application/json":
+	if strings.Contains(cType, "application/json") {
 		b := &bytes.Buffer{}
 		if err := json.Indent(b, body, "", "  "); err != nil {
 			return "", err
 		}
 		return b.String(), nil
 	}
+
 	return string(body), nil
 }
