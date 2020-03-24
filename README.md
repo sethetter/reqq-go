@@ -1,11 +1,14 @@
 # reqq
 
-CLI for sending HTTP requests defined through config files defined in a local project folder.
+CLI for sending HTTP requests defined in text files.
 
-- `.reqq/envs/` defines available environments for the project.
-- `.reqq/reqs/` defines the requests that can be performed.
+## Installing
 
-## Commands
+```
+$ go install github.com/sethetter/reqq
+```
+
+## Usage
 
 Without a subcommand, `reqq`'s default behavior is to issue the defined http request.
 
