@@ -17,10 +17,10 @@ reqq path/to/request/file.txt
 func main() {
 	app := &cli.App{
 		Flags: []cli.Flag{
-			// TODO: Short form? -e as well as --env?
 			&cli.StringFlag{
-				Name:  "env",
-				Usage: "Path to the JSON env file providing the data to fill in to request template vars.",
+				Name:    "env",
+				Aliases: []string{"e"},
+				Usage:   "Path to the JSON env file providing the data to fill in to request template vars.",
 			},
 		},
 		Action: func(c *cli.Context) error {
