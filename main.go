@@ -1,10 +1,12 @@
 package main
 
 import (
-	"flag"
+	"errors"
 	"fmt"
 	"net/http"
 	"os"
+
+	"github.com/urfave/cli/v2"
 )
 
 var usage string = `reqq: help
@@ -13,39 +15,45 @@ reqq path/to/request/file.txt
 `
 
 func main() {
-	// parse the first arg, check for existence of file at .reqq/...
-	flag.Parse()
-	args := flag.Args()
+	app := &cli.App{
+		Flags: []cli.Flag{
+			// TODO: Short form? -e as well as --env?
+			&cli.StringFlag{
+				Name:  "env",
+				Usage: "Path to the JSON env file providing the data to fill in to request template vars.",
+			},
+		},
+		Action: func(c *cli.Context) error {
+			f, err := os.Open(c.Args().Get(0))
+			if err != nil {
+				if os.IsNotExist(err) {
+					return errors.New("request file does not exist")
+				}
+				return err
+			}
 
-	if len(args) != 1 {
-		panic(usage)
+			req, err := NewRequest(f)
+			if err != nil {
+				return err
+			}
+
+			// send it
+			res, err := req.Send(http.DefaultClient)
+			if err != nil {
+				return err
+			}
+
+			// TODO: transform the output
+			out, err := FormatResponse(res)
+			if err != nil {
+				return err
+			}
+
+			fmt.Printf("%s\n", out)
+
+			return nil
+		},
 	}
 
-	// read the file, parse it into a request
-	f, err := os.Open(args[0])
-	if err != nil {
-		if os.IsNotExist(err) {
-			panic("request file does not exist")
-		}
-		panic(err)
-	}
-
-	req, err := NewRequest(f)
-	if err != nil {
-		panic(err)
-	}
-
-	// send it
-	res, err := req.Send(http.DefaultClient)
-	if err != nil {
-		panic(err)
-	}
-
-	// TODO: transform the output
-	out, err := FormatResponse(res)
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Printf("%s\n", out)
+	app.Run(os.Args)
 }
