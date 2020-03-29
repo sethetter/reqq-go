@@ -14,6 +14,7 @@ func TestNewRequest(t *testing.T) {
 	tests := []struct {
 		desc   string
 		in     string
+		env    string
 		err    error
 		expect Request
 	}{
@@ -59,6 +60,17 @@ yadayadayada yadayadayada`, "\n"),
 			err:    errors.New("first line must include"),
 			expect: Request{},
 		},
+		{
+			desc: "happy path, with env",
+			env:  `{"baseUrl": "https://just.a.url.com"}`,
+			in:   "GET {{ .baseUrl }}/lol",
+			err:  nil,
+			expect: Request{
+				Method: "GET",
+				URL:    "https://just.a.url.com",
+				Body:   "",
+			},
+		},
 	}
 
 	for i, tc := range tests {
@@ -66,11 +78,11 @@ yadayadayada yadayadayada`, "\n"),
 			reqR := strings.NewReader(tc.in)
 
 			var envR io.Reader
-			if in.env != "" {
-				envR = strings.NewReader(in.env)
+			if tc.env != "" {
+				envR = strings.NewReader(tc.env)
 			}
 
-			req, err := NewRequest(strings.NewReader(tc.in), envR)
+			req, err := NewRequest(reqR, envR)
 
 			if tc.err != nil {
 				assert.Contains(t, err.Error(), tc.err.Error())
