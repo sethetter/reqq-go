@@ -33,10 +33,17 @@ func (e *ParseError) Error() string {
 
 func (e *ParseError) Unwrap() error { return e.Err }
 
-func NewRequest(r io.Reader) (Request, error) {
+func NewRequest(reqR io.Reader, envR io.Reader) (Request, error) {
 	var req Request
 
-	lines := bufio.NewScanner(r)
+	// TODO: if envR != nil..
+	// parse the env file as JSON
+	// parse the request file as a template
+	// validate?!
+	// execute the template with the JSON data
+	// then parse and execute it as a request
+
+	lines := bufio.NewScanner(reqR)
 
 	// Parse method and URL from first line.
 	lines.Scan()
