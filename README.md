@@ -39,11 +39,10 @@ This project is under active development!
 
 ## TODO
 
-- Environment files.
+- Allow comments in request files.
 - Better output.
   - More content-type formats?
   - Colors?
-- Comments in request files.
 
 # Inpsiration
 
