@@ -36,21 +36,25 @@ func mainAction(c *cli.Context) error {
 
 	reqF, envF, err := getReqAndEnvFiles(reqPath, envPath)
 	if err != nil {
+		fmt.Printf("failed getting req and env files: %v", err)
 		return err
 	}
 
 	req, err := NewRequest(reqF, envF)
 	if err != nil {
+		fmt.Printf("failed to parse request: %v", err)
 		return err
 	}
 
 	res, err := req.Send(http.DefaultClient)
 	if err != nil {
+		fmt.Printf("failed to execute http request: %v", err)
 		return err
 	}
 
 	out, err := FormatResponse(res)
 	if err != nil {
+		fmt.Printf("failed formatting response: %v", err)
 		return err
 	}
 
