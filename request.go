@@ -18,7 +18,7 @@ import (
 
 // Request represents an HTTP request to be sent.
 type Request struct {
-	// TODO: should this just wrap the net/http.Request struct?
+	// TODO: this should just wrap the net/http.Request struct
 	Method  string
 	URL     string
 	Headers http.Header
@@ -85,6 +85,7 @@ func parseReqWithEnv(reqR io.Reader, envR io.Reader) (Request, error) {
 		}
 	}
 
+	// execute the template with the env data
 	var parsedReq bytes.Buffer
 	if err := reqT.Execute(&parsedReq, envMap); err != nil {
 		return Request{}, &ParseError{

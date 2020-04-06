@@ -34,7 +34,7 @@ func mainAction(c *cli.Context) error {
 	reqPath := c.Args().Get(0)
 	envPath := c.String("env")
 
-	reqF, envF, err := getReqAndEnvFiles(reqPath, envPath)
+	reqF, envF, err := openReqAndEnvFiles(reqPath, envPath)
 	if err != nil {
 		fmt.Printf("failed getting req and env files: %v", err)
 		return err
@@ -63,7 +63,7 @@ func mainAction(c *cli.Context) error {
 	return nil
 }
 
-func getReqAndEnvFiles(reqPath string, envPath string) (io.Reader, io.Reader, error) {
+func openReqAndEnvFiles(reqPath string, envPath string) (io.Reader, io.Reader, error) {
 	reqF, err := os.Open(reqPath)
 	if err != nil {
 		if os.IsNotExist(err) {
