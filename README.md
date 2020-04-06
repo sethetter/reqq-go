@@ -40,6 +40,7 @@ This project is under active development!
 ## TODO
 
 - Allow comments in request files.
+- Layering env files?
 - Better output.
   - More content-type formats?
   - Colors?
