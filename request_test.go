@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"net/http"
 	"strings"
 	"testing"
 
@@ -66,10 +67,18 @@ yadayadayada yadayadayada`, "\n"),
 			in:   "GET {{ .baseUrl }}/lol",
 			err:  nil,
 			expect: Request{
-				Method: "GET",
-				URL:    "https://just.a.url.com",
-				Body:   "",
+				Method:  "GET",
+				URL:     "https://just.a.url.com/lol",
+				Headers: http.Header{},
+				Body:    "",
 			},
+		},
+		{
+			desc:   "failure: env with non-string keys",
+			env:    `{"baseUrl": "https://just.a.url.com", "sup": true}`,
+			in:     "GET {{ .baseUrl }}/lol",
+			err:    errors.New("should only have string values"),
+			expect: Request{},
 		},
 	}
 
