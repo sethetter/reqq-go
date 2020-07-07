@@ -9,25 +9,33 @@ import (
 	"strings"
 )
 
-func FormatResponse(res *http.Response) (string, error) {
-	out := res.Status + "\n"
+func FormatResponse(res *http.Response, raw bool) (string, error) {
+	var out string
 
-	for k, vs := range res.Header {
-		// Same header can have multiple entries.
-		for _, v := range vs {
-			out = out + fmt.Sprintf("%s: %s\n", k, v)
+	if !raw {
+		out = res.Status + "\n"
+
+		for k, vs := range res.Header {
+			// Same header can have multiple entries.
+			for _, v := range vs {
+				out = out + fmt.Sprintf("%s: %s\n", k, v)
+			}
 		}
-	}
 
-	out = out + "\n"
+		out = out + "\n"
+	}
 
 	rawBody, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		return out, err
 	}
 
-	body := FormatBody(res.Header.Get("content-type"), rawBody)
-	out += body
+	if !raw {
+		body := FormatBody(res.Header.Get("content-type"), rawBody)
+		out += body
+	} else {
+		out += string(rawBody)
+	}
 
 	return out, nil
 }

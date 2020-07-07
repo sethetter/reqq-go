@@ -23,6 +23,11 @@ func main() {
 				Aliases: []string{"e"},
 				Usage:   "Path to the JSON env file providing the data to fill in to request template vars.",
 			},
+			&cli.BoolFlag{
+				Name:    "raw",
+				Aliases: []string{"r"},
+				Usage:   "Only output the raw response body, no headers or special formatting.",
+			},
 		},
 		Action: mainAction,
 	}
@@ -52,7 +57,7 @@ func mainAction(c *cli.Context) error {
 		return err
 	}
 
-	out, err := FormatResponse(res)
+	out, err := FormatResponse(res, c.Bool("raw"))
 	if err != nil {
 		fmt.Printf("failed formatting response: %v", err)
 		return err
