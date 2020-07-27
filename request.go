@@ -137,7 +137,7 @@ func parseReq(reqR io.Reader) (Request, error) {
 		}
 
 		parts = strings.SplitN(line, ": ", 2)
-		req.Headers.Add(parts[0], strings.Trim(parts[1], "\n"))
+		req.Headers.Add(parts[0], strings.TrimSpace(parts[1]))
 	}
 	if err := lines.Err(); err != nil {
 		return req, &ParseError{Msg: "failed reading header lines", Err: err}
@@ -152,7 +152,6 @@ func parseReq(reqR io.Reader) (Request, error) {
 	}
 
 	return req, nil
-
 }
 
 func validateMethod(method string) error {
@@ -176,7 +175,12 @@ func (r *Request) Build() (*http.Request, error) {
 	if r.Body != "" {
 		bodyR = strings.NewReader(r.Body)
 	}
-	return http.NewRequest(r.Method, r.URL, bodyR)
+	req, err := http.NewRequest(r.Method, r.URL, bodyR)
+	if err != nil {
+		return req, err
+	}
+	req.Header = r.Headers
+	return req, nil
 }
 
 func (r *Request) Send(c *http.Client) (*http.Response, error) {
