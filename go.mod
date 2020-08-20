@@ -1,4 +1,4 @@
-module github.com/sethetter/reqq
+module github.com/sethetter/reqq-go
 
 go 1.13
 
